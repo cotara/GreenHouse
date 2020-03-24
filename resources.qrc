@@ -114,6 +114,10 @@
         <file>Resources/lightheating.png</file>
         <file>Resources/lightpump.png</file>
         <file>Resources/pump.png</file>
+        <file>Resources/NObulb.png</file>
+        <file>Resources/NOfan.png</file>
+        <file>Resources/NOheating.png</file>
+        <file>Resources/NOpump.png</file>
     </qresource>
     <qresource prefix="/">
         <file>qml/dialcontrol.qml</file>

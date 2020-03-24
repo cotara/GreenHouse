@@ -34,6 +34,14 @@ private slots:
     void on_ChooseDirDialog_clicked();
     void on_pushButton_clicked();//Старт запись
 
+    void on_BulbButton_clicked();
+
+    void on_WindowsButton_clicked();
+
+    void on_PumpButton_clicked();
+
+    void on_HeatButton_clicked();
+
 private:
     struct state{
         QTime time;
@@ -41,10 +49,14 @@ private:
         double &temperature = myPlotData.a;
         double &humidity = myPlotData.b;
         double &illumination = myPlotData.c;
-        bool bulb;
-        bool windows;
-        bool pump;
-        bool heat;
+        bool bulbIsOn;
+        bool windowsIsOn;
+        bool pumpIsOn;
+        bool heatIsOn;
+        bool bulbEnabled=true;
+        bool windowsEnabled=true;
+        bool pumpEnabled=true;
+        bool heatEnabled=true;
 
 
     }now_state;
@@ -58,7 +70,7 @@ private:
     QQuickWidget *illuminationQW;
     WebCam *mCam;
     MyPlot *mPlot, *historyPlot;
-
+    Console *mConsole;
 
     void readData();
     void parser(const QByteArray &str);

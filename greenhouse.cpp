@@ -17,11 +17,9 @@ GreenHouse::GreenHouse(QWidget *parent) :  QMainWindow(parent),
     //Настройки COM-пота
     settings_ptr = new SerialSettings();
     serial = new QSerialPort();
+
     connect(serial, &QSerialPort::readyRead, this, &GreenHouse::readData);
 
-    //Виджет консоли
-    ui->ConsoleWidget->setEnabled(true);
-    ui->ConsoleWidget->setMaximumWidth(350);
     ui->Disconnect->setEnabled(false);
 
     //Виджеты стрелочных приборов
@@ -37,10 +35,15 @@ GreenHouse::GreenHouse(QWidget *parent) :  QMainWindow(parent),
     timer.start();
     connect(&timer,&QTimer::timeout,this,&GreenHouse::realTimeout);
 
+    //Виджет консоли
+    mConsole = new Console();
+    ui->horizontalLayout_7->addWidget(mConsole);
+    mConsole->setEnabled(true);
+    mConsole->setMaximumWidth(450);
+
     //Виджет графика
     mPlot = new MyPlot(0);
     ui->horizontalLayout_7->addWidget(mPlot);
-
     //Виджет камеры
     mCam = new WebCam();
     ui->CamLayout->addWidget(mCam);
@@ -67,7 +70,7 @@ void GreenHouse::realTimeout()
 {
     RealTime.setText("Системное время: " + QTime::currentTime().toString());
     if(QTime::currentTime().minute() == 0)
-        ui->ConsoleWidget->clear();
+        mConsole->clear();
 }
 
 //Прием данных из COM-порта
@@ -81,7 +84,7 @@ void GreenHouse::readData()
                 //парсер вызывайтунг
                 parser(stringa);
                 stringa+="\n";
-                ui->ConsoleWidget->putData(stringa);
+                mConsole->putData(stringa);
                 if( log!= nullptr){
                     if(log->get_logging_state() == true)
                         log->wrire_to_file(stringa);
@@ -128,58 +131,86 @@ void GreenHouse::parser(const QByteArray &str){
             else if(i.at(0) == 'B' && i.at(1) == 'u'){
                 QList<QByteArray> temp = i.split('=');
                 if (temp.length() > 1){
-                    now_state.bulb=temp.at(1).toInt();
-                    if (now_state.bulb){
-                        QPixmap myPixmap( ":/new/Resources/lightbulb.png");
-                        ui->BulbLabel_2->setPixmap(myPixmap);
+                    now_state.bulbIsOn=temp.at(1).toInt();
+                    QPixmap myPixmap;
+                    if (now_state.bulbEnabled){
+                        if (now_state.bulbIsOn)
+                            myPixmap=QPixmap(":/new/Resources/lightbulb.png");
+                        else
+                             myPixmap=QPixmap( ":/new/Resources/bulb.png");
                     }
-                    else{
-                        QPixmap myPixmap( ":/new/Resources/bulb.png");
-                        ui->BulbLabel_2->setPixmap(myPixmap);
-                    }
+                    else
+                        myPixmap=QPixmap( ":/new/Resources/NObulb.png");
+                    ui->BulbButton->setIcon(myPixmap);
                 }
             }
             else if(i.at(0) == 'W' && i.at(1) == 'i'){
                 QList<QByteArray> temp = i.split('=');
                 if (temp.length() > 1){
-                    now_state.windows=temp.at(1).toInt();
-                    if (now_state.windows){
-                        QPixmap myPixmap( ":/new/Resources/lightfan.png");
-                        ui->WindowsLabel_2->setPixmap(myPixmap);
+                    now_state.windowsIsOn=temp.at(1).toInt();
+                    QPixmap myPixmap;
+                    if (now_state.windowsEnabled){
+                        if (now_state.windowsIsOn)
+                            myPixmap=QPixmap(":/new/Resources/lightfan.png");
+                        else
+                             myPixmap=QPixmap( ":/new/Resources/fan.png");
                     }
-                    else{
-                        QPixmap myPixmap( ":/new/Resources/fan.png");
-                        ui->WindowsLabel_2->setPixmap(myPixmap);
-                    }
+                    else
+                        myPixmap=QPixmap( ":/new/Resources/NOfan.png");
+                    ui->WindowsButton->setIcon(myPixmap);
                 }
             }
             else if(i.at(0) == 'P' && i.at(1) == 'u'){
                 QList<QByteArray> temp = i.split('=');
                 if (temp.length() > 1){
-                    now_state.pump=temp.at(1).toInt();
-                    if (now_state.pump){
-                        QPixmap myPixmap( ":/new/Resources/lightpump.png");
-                        ui->PumpLabel_2->setPixmap(myPixmap);
+                    now_state.pumpIsOn=temp.at(1).toInt();
+                    QPixmap myPixmap;
+                    if (now_state.pumpEnabled){
+                        if (now_state.pumpIsOn)
+                            myPixmap=QPixmap(":/new/Resources/lightpump.png");
+                        else
+                             myPixmap=QPixmap( ":/new/Resources/pump.png");
                     }
-                    else{
-                        QPixmap myPixmap( ":/new/Resources/pump.png");
-                        ui->PumpLabel_2->setPixmap(myPixmap);
-                    }
+                    else
+                        myPixmap=QPixmap( ":/new/Resources/NOpump.png");
+                    ui->PumpButton->setIcon(myPixmap);
                 }
             }
             else if(i.at(0) == 'H' && i.at(1) == 'e'){
                 QList<QByteArray> temp = i.split('=');
                 if (temp.length() > 1){
-                    now_state.heat=temp.at(1).toInt();
-                    if (now_state.heat){
-                         QPixmap myPixmap( ":/new/Resources/lightheating.png");
-                        ui->HeatLabel_2->setPixmap(myPixmap);
+                    now_state.heatIsOn=temp.at(1).toInt();
+                    QPixmap myPixmap;
+                    if (now_state.heatEnabled){
+                        if (now_state.heatIsOn)
+                            myPixmap=QPixmap(":/new/Resources/lightheating.png");
+                        else
+                             myPixmap=QPixmap( ":/new/Resources/heating.png");
                     }
-                    else{
-                        QPixmap myPixmap( ":/new/Resources/heating.png");
-                        ui->HeatLabel_2->setPixmap(myPixmap);
-                    }
+                    else
+                        myPixmap=QPixmap( ":/new/Resources/NOheating.png");
+                    ui->HeatButton->setIcon(myPixmap);
                 }
+            }
+            else if(i.at(0) == 'B' && i.at(1) == 'E'){
+                QList<QByteArray> temp = i.split('=');
+                if (temp.length() > 1)
+                    now_state.bulbEnabled=temp.at(1).toInt();
+            }
+            else if(i.at(0) == 'W' && i.at(1) == 'E'){
+                QList<QByteArray> temp = i.split('=');
+                if (temp.length() > 1)
+                    now_state.windowsEnabled=temp.at(1).toInt();
+            }
+            else if(i.at(0) == 'P' && i.at(1) == 'E'){
+                QList<QByteArray> temp = i.split('=');
+                if (temp.length() > 1)
+                    now_state.pumpEnabled=temp.at(1).toInt();
+            }
+            else if(i.at(0) == 'H' && i.at(1) == 'E'){
+                QList<QByteArray> temp = i.split('=');
+                if (temp.length() > 1)
+                    now_state.heatEnabled=temp.at(1).toInt();
             }
             else if(i.count(':') == 2){
 
@@ -283,6 +314,10 @@ void GreenHouse::on_Connect_triggered()
         ui->Connect->setEnabled(false);
         ui->Settings->setEnabled(false);
         ui->Disconnect->setEnabled(true);
+        ui->BulbButton->setEnabled(true);
+        ui->WindowsButton->setEnabled(true);
+        ui->PumpButton->setEnabled(true);
+        ui->HeatButton->setEnabled(true);
         mPlot->activateButtons();
     }
     else{
@@ -296,6 +331,10 @@ void GreenHouse::on_Disconnect_triggered()
         ui->Connect->setEnabled(true);
         ui->Settings->setEnabled(true);
         ui->Disconnect->setEnabled(false);
+        ui->BulbButton->setEnabled(false);
+        ui->WindowsButton->setEnabled(false);
+        ui->PumpButton->setEnabled(false);
+        ui->HeatButton->setEnabled(false);
         ui->statusBar->showMessage("Отключено от " + settings_ptr->getName());
         mPlot->diactivateButtons();
     }
@@ -332,3 +371,31 @@ void GreenHouse::on_pushButton_clicked()
 
 
 
+
+void GreenHouse::on_BulbButton_clicked()
+{
+    QString message = "BF=" + QString::number(ui->BulbButton->isChecked())+ '\n';
+    serial->write(message.toUtf8().data());
+    mConsole->putData(message.toUtf8());
+}
+
+void GreenHouse::on_WindowsButton_clicked()
+{
+    QString message = "WF=" + QString::number(ui->WindowsButton->isChecked())+ '\n';
+    serial->write(message.toUtf8().data());
+    mConsole->putData(message.toUtf8());
+}
+
+void GreenHouse::on_PumpButton_clicked()
+{
+    QString message = "PF=" + QString::number(ui->PumpButton->isChecked())+ '\n';
+    serial->write(message.toUtf8().data());
+    mConsole->putData(message.toUtf8());
+}
+
+void GreenHouse::on_HeatButton_clicked()
+{
+    QString message = "HF=" + QString::number(ui->HeatButton->isChecked())+ '\n';
+    serial->write(message.toUtf8().data());
+    mConsole->putData(message.toUtf8());
+}
