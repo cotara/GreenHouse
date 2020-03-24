@@ -17,7 +17,7 @@ SerialSettings::SerialSettings(QDialog *parent) : QDialog(parent)
 
 SerialSettings::~SerialSettings()
 {
-    delete serialSettings;
+    //delete serialSettings;
 }
 
 bool SerialSettings::fill_all()

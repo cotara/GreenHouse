@@ -87,15 +87,15 @@ MyPlot::MyPlot(int type,QWidget *parent) : QWidget(parent)
 
 MyPlot::~MyPlot()
 {
-    //delete layout;
-    //delete butLayout;
-    delete mPlot;
-    delete startStopButton;
-    delete clearButton;
-    delete spacer;
-    delete mTag1;
-    delete mTag2;
-    delete mTag3;
+//    delete layout;
+//    delete butLayout;
+//    delete mPlot;
+//    delete startStopButton;
+//    delete clearButton;
+//    delete spacer;
+//    delete mTag1;
+//    delete mTag2;
+//    delete mTag3;
 }
 
 void MyPlot::selectionChanged()

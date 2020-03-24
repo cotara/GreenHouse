@@ -57,12 +57,12 @@ GreenHouse::GreenHouse(QWidget *parent) :  QMainWindow(parent),
 
 }
 GreenHouse::~GreenHouse(){
-    delete ui;
-    delete settings_ptr;
-    delete serial;
-    delete mPlot;
-    delete mCam;
-    delete log;
+//    delete ui;
+//    delete settings_ptr;
+//    delete serial;
+//    delete mPlot;
+//    delete mCam;
+//    delete log;
 }
 
 //Обработчик таймера

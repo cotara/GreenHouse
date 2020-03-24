@@ -1,7 +1,7 @@
 #include "webcam.h"
 #include <QCamera>
 #include <QCameraViewfinder>
-
+#include <QCameraInfo>
 
 
 WebCam::WebCam()
@@ -26,31 +26,31 @@ WebCam::WebCam()
     connect(startStopButton, &QPushButton::clicked, this, &WebCam::on_startStopButton_clicked);
     connect(updateButton, &QPushButton::clicked, this, &WebCam::on_updateButton_clicked);
 
-        QList<QByteArray> cameras = QCamera::availableDevices();
-        if (!cameras.isEmpty()){
-            m_camera = new QCamera( cameras.first());
-            layout->insertWidget(0,viewfinder);
-            viewfinder->setMinimumSize( 50, 50 );
-            m_camera->setViewfinder( viewfinder );
-            m_camera->setCaptureMode( QCamera::CaptureStillImage );
-            m_camera->start();        
-            startStopButton->setText("Остановить трансляцию");
-            startStopButton->setEnabled(true);
-        }
-        else{
-            label = new QLabel;
-            layout->insertWidget(0,label);
-            label->setText("Веб-камера недоступна");
-        }
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    if (!cameras.isEmpty()){
+        m_camera = new QCamera( cameras.first());
+        layout->insertWidget(0,viewfinder);
+        viewfinder->setMinimumSize( 50, 50 );
+        m_camera->setViewfinder( viewfinder );
+        m_camera->setCaptureMode( QCamera::CaptureStillImage );
+        m_camera->start();
+        startStopButton->setText("Остановить трансляцию");
+        startStopButton->setEnabled(true);
+    }
+    else{
+        label = new QLabel;
+        layout->insertWidget(0,label);
+        label->setText("Веб-камера недоступна");
+    }
 }
 WebCam::~WebCam(){
-    delete label;
-    delete viewfinder;
-    delete layout;
-    delete startStopButton;
-    delete updateButton;
-    delete butLayout;
-    delete spacer;
+//    delete label;
+//    delete viewfinder;
+//    delete layout;
+//    delete startStopButton;
+//    delete updateButton;
+//    delete butLayout;
+//    delete spacer;
 }
 
 void WebCam::on_startStopButton_clicked()
@@ -81,9 +81,9 @@ void WebCam::on_updateButton_clicked()
         m_camera = nullptr;
     }
 
-    QList<QByteArray> cameras = QCamera::availableDevices();
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
     if (!cameras.isEmpty()){
-        m_camera = new QCamera( cameras.first());
+        m_camera = new QCamera(cameras.first());
         viewfinder = new QCameraViewfinder;
         layout->insertWidget(0,viewfinder);
         viewfinder->setMinimumSize( 50, 50 );
