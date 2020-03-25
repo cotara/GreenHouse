@@ -118,6 +118,10 @@
         <file>Resources/NOfan.png</file>
         <file>Resources/NOheating.png</file>
         <file>Resources/NOpump.png</file>
+        <file>Resources/down.png</file>
+        <file>Resources/left.png</file>
+        <file>Resources/right.png</file>
+        <file>Resources/up.png</file>
     </qresource>
     <qresource prefix="/">
         <file>qml/dialcontrol.qml</file>

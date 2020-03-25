@@ -8,20 +8,52 @@ WebCam::WebCam()
 {
     viewfinder = new QCameraViewfinder;
     layout = new QVBoxLayout;
+    layout_panel = new QHBoxLayout;
     startStopButton = new QPushButton;
     updateButton = new QPushButton;
-    butLayout = new QHBoxLayout;
+    leftButton = new QPushButton;
+    rightButton = new QPushButton;
+    upButton = new QPushButton;
+    downButton = new QPushButton;
+    butLayout = new QVBoxLayout;
+    layout_control = new QHBoxLayout;
+    layout_left = new QVBoxLayout;
+    layout_center = new QVBoxLayout;
+    layout_right = new QVBoxLayout;
     spacer = new QSpacerItem(1,1, QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     setLayout(layout);
-    layout->addLayout(butLayout);
-    butLayout->addSpacerItem(spacer);
-    butLayout->addWidget(startStopButton);
-    startStopButton->setText("Запустить трансляцию");
-    startStopButton->setEnabled(false);
-    butLayout->addWidget(updateButton);
-    updateButton->setText("Обновить камеру");
+    layout->addLayout(layout_panel);
+    layout_panel->addSpacerItem(spacer);
 
+    layout_panel->addLayout(layout_control);
+        layout_control->addLayout(layout_left);
+            layout_left->addWidget(leftButton);
+        layout_control->addLayout(layout_center);
+            layout_center->addWidget(upButton);
+            layout_center->addWidget(downButton);
+        layout_control->addLayout(layout_right);
+            layout_right->addWidget(rightButton);
+
+    layout_panel->addLayout(butLayout);
+        butLayout->addWidget(startStopButton);
+        startStopButton->setText("Запустить трансляцию");
+        startStopButton->setEnabled(false);
+        butLayout->addWidget(updateButton);
+        updateButton->setText("Обновить камеру");
+
+    leftButton->setIcon(QPixmap( ":/new/Resources/left.png"));
+    rightButton->setIcon(QPixmap( ":/new/Resources/right.png"));
+    upButton->setIcon(QPixmap( ":/new/Resources/up.png"));
+    downButton->setIcon(QPixmap( ":/new/Resources/down.png"));
+    leftButton->setEnabled(false);
+    rightButton->setEnabled(false);
+    upButton->setEnabled(false);
+    downButton->setEnabled(false);
+    connect(leftButton, &QPushButton::clicked, this, &WebCam::on_leftButton_clicked);
+    connect(rightButton, &QPushButton::clicked, this, &WebCam::on_rightButton_clicked);
+    connect(upButton, &QPushButton::clicked, this, &WebCam::on_upButton_clicked);
+    connect(downButton, &QPushButton::clicked, this, &WebCam::on_downButton_clicked);
 
     connect(startStopButton, &QPushButton::clicked, this, &WebCam::on_startStopButton_clicked);
     connect(updateButton, &QPushButton::clicked, this, &WebCam::on_updateButton_clicked);
@@ -50,7 +82,15 @@ WebCam::~WebCam(){
 //    delete startStopButton;
 //    delete updateButton;
 //    delete butLayout;
-//    delete spacer;
+    //    delete spacer;
+}
+
+void WebCam::setEnabledButtons(bool val)
+{
+    leftButton->setEnabled(val);
+    rightButton->setEnabled(val);
+    upButton->setEnabled(val);
+    downButton->setEnabled(val);
 }
 
 void WebCam::on_startStopButton_clicked()
@@ -106,5 +146,29 @@ void WebCam::on_updateButton_clicked()
         label->setText("Веб-камера недоступна");
         startStopButton->setEnabled(false);
     }
+}
+
+void WebCam::on_downButton_clicked()
+{
+    controls_value.up_down--;
+    emit send_control("UD",controls_value.up_down);
+}
+
+void WebCam::on_upButton_clicked()
+{
+    controls_value.up_down++;
+    emit send_control("UD",controls_value.up_down);
+}
+
+void WebCam::on_leftButton_clicked()
+{
+    controls_value.left_right--;
+    emit send_control("LR",controls_value.left_right);
+}
+
+void WebCam::on_rightButton_clicked()
+{
+    controls_value.left_right++;
+    emit send_control("LR",controls_value.left_right);
 }
 

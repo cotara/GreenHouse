@@ -42,6 +42,9 @@ private slots:
 
     void on_HeatButton_clicked();
 
+    void send_control_web(QString, int);
+    void readData();
+
 private:
     struct state{
         QTime time;
@@ -72,7 +75,7 @@ private:
     MyPlot *mPlot, *historyPlot;
     Console *mConsole;
 
-    void readData();
+
     void parser(const QByteArray &str);
     void set_temperature_dial();
     void set_humidity_dial();

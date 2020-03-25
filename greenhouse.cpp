@@ -44,10 +44,11 @@ GreenHouse::GreenHouse(QWidget *parent) :  QMainWindow(parent),
     //Виджет графика
     mPlot = new MyPlot(0);
     ui->horizontalLayout_7->addWidget(mPlot);
+
     //Виджет камеры
     mCam = new WebCam();
     ui->CamLayout->addWidget(mCam);
-
+    connect(mCam, &WebCam::send_control, this, &GreenHouse::send_control_web);
     //Виджет лукер
     historyPlot = new MyPlot(1);
     ui->GraphFileLayout->addWidget(historyPlot);
@@ -318,6 +319,8 @@ void GreenHouse::on_Connect_triggered()
         ui->WindowsButton->setEnabled(true);
         ui->PumpButton->setEnabled(true);
         ui->HeatButton->setEnabled(true);
+        mCam->setEnabledButtons(true);
+
         mPlot->activateButtons();
     }
     else{
@@ -335,6 +338,8 @@ void GreenHouse::on_Disconnect_triggered()
         ui->WindowsButton->setEnabled(false);
         ui->PumpButton->setEnabled(false);
         ui->HeatButton->setEnabled(false);
+        mCam->setEnabledButtons(false);
+
         ui->statusBar->showMessage("Отключено от " + settings_ptr->getName());
         mPlot->diactivateButtons();
     }
@@ -396,6 +401,13 @@ void GreenHouse::on_PumpButton_clicked()
 void GreenHouse::on_HeatButton_clicked()
 {
     QString message = "HF=" + QString::number(ui->HeatButton->isChecked())+ '\n';
+    serial->write(message.toUtf8().data());
+    mConsole->putData(message.toUtf8());
+}
+
+void GreenHouse::send_control_web(QString type, int value)
+{
+    QString message = type+ "=" + QString::number(value)+ '\n';
     serial->write(message.toUtf8().data());
     mConsole->putData(message.toUtf8());
 }
