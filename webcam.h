@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QCameraViewfinder>
 #include <QLabel>
+#include <QSlider>
 #include <QVBoxLayout>
 #include <QPushButton>
 
@@ -20,20 +21,24 @@ public:
 private:
     QCamera *m_camera = nullptr;
     QCameraViewfinder *viewfinder = nullptr;
-    QLabel *label = nullptr;
+    QLabel *label = nullptr, *sliderLabel;
     QVBoxLayout *layout, *butLayout, *layout_left,*layout_center,*layout_right;
     QHBoxLayout *layout_control,*layout_panel;
     QSpacerItem *spacer;
+    QSlider *slider;
     QPushButton *startStopButton,*updateButton,*upButton,*downButton,*leftButton,*rightButton;
 
     struct{
-        int up_down=0;
-        int left_right=0;
+        int up_down=90;
+        int left_right=90;
+        int k=5;
     }controls_value;
+
 
 private slots:
     void on_startStopButton_clicked();
     void on_updateButton_clicked();
+    void on_slider_valueChanged();
 
 public slots:
     void on_downButton_clicked();

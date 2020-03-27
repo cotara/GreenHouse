@@ -207,7 +207,6 @@ void MyPlot::paint_graphs(const Data &data)
 
 void MyPlot::paint_histiory(QVector<double> a, QVector<double> b, QVector<double> c)
 {
-    double rangeX = a.size();
     QVector<double> x;
 
     for (int i =0;i<a.size();i++){

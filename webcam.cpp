@@ -21,10 +21,20 @@ WebCam::WebCam()
     layout_center = new QVBoxLayout;
     layout_right = new QVBoxLayout;
     spacer = new QSpacerItem(1,1, QSizePolicy::Expanding, QSizePolicy::Fixed);
+    slider = new QSlider(Qt::Horizontal);
+    sliderLabel = new QLabel;
 
     setLayout(layout);
     layout->addLayout(layout_panel);
     layout_panel->addSpacerItem(spacer);
+
+    sliderLabel->setNum(controls_value.k);
+    layout_panel->addWidget(sliderLabel);
+
+    slider->setRange(1,20);
+    slider->setValue(controls_value.k);
+    layout_panel->addWidget(slider);
+    connect(slider, &QSlider::valueChanged, this, &WebCam::on_slider_valueChanged);
 
     layout_panel->addLayout(layout_control);
         layout_control->addLayout(layout_left);
@@ -148,27 +158,49 @@ void WebCam::on_updateButton_clicked()
     }
 }
 
+void WebCam::on_slider_valueChanged()
+{
+    controls_value.k = slider->value();
+    sliderLabel->setNum(controls_value.k);
+}
+
 void WebCam::on_downButton_clicked()
 {
-    controls_value.up_down--;
+    controls_value.up_down += controls_value.k;
+    if (controls_value.up_down>180)
+        controls_value.up_down=180;
+    if(controls_value.up_down<0)
+        controls_value.up_down=0;
     emit send_control("UD",controls_value.up_down);
 }
 
 void WebCam::on_upButton_clicked()
 {
-    controls_value.up_down++;
+    controls_value.up_down -= controls_value.k;
+    if (controls_value.up_down>180)
+        controls_value.up_down=180;
+    if(controls_value.up_down<0)
+        controls_value.up_down=0;
     emit send_control("UD",controls_value.up_down);
 }
 
 void WebCam::on_leftButton_clicked()
 {
-    controls_value.left_right--;
+    controls_value.left_right += controls_value.k;
+    if (controls_value.left_right>180)
+        controls_value.left_right=180;
+    if(controls_value.left_right<0)
+        controls_value.left_right=0;
     emit send_control("LR",controls_value.left_right);
 }
 
 void WebCam::on_rightButton_clicked()
 {
-    controls_value.left_right++;
+    controls_value.left_right -= controls_value.k;
+    if (controls_value.left_right>180)
+        controls_value.left_right=180;
+    if(controls_value.left_right<0)
+        controls_value.left_right=0;
     emit send_control("LR",controls_value.left_right);
 }
 
