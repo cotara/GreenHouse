@@ -1,5 +1,6 @@
 #ifndef WEBCAM_H
 #define WEBCAM_H
+
 #include <QCamera>
 #include <QWidget>
 #include <QCameraViewfinder>

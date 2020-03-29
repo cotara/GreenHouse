@@ -1,4 +1,4 @@
- #ifndef GREENHOUSE_H
+#ifndef GREENHOUSE_H
 #define GREENHOUSE_H
 
 #include <QMainWindow>

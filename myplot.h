@@ -1,5 +1,6 @@
 #ifndef MYPLOT_H
 #define MYPLOT_H
+
 #include "qcustomplot.h"
 #include "axistag.h"
 #include <QVBoxLayout>

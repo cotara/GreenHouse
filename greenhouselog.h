@@ -1,5 +1,6 @@
 #ifndef GREENHOUSELOG_H
 #define GREENHOUSELOG_H
+
 #include <QString>
 #include <QFile>
 #include <QDate>
