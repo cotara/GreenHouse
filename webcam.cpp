@@ -11,40 +11,17 @@ WebCam::WebCam()
     layout_panel = new QHBoxLayout;
     startStopButton = new QPushButton;
     updateButton = new QPushButton;
-    leftButton = new QPushButton;
-    rightButton = new QPushButton;
-    upButton = new QPushButton;
-    downButton = new QPushButton;
     butLayout = new QVBoxLayout;
-    layout_control = new QHBoxLayout;
-    layout_left = new QVBoxLayout;
-    layout_center = new QVBoxLayout;
-    layout_right = new QVBoxLayout;
+
     spacer = new QSpacerItem(1,1, QSizePolicy::Expanding, QSizePolicy::Fixed);
-    slider = new QSlider(Qt::Horizontal);
-    sliderLabel = new QLabel;
 
     setLayout(layout);
     layout->addLayout(layout_panel);
+
+    //1
     layout_panel->addSpacerItem(spacer);
 
-    sliderLabel->setNum(controls_value.k);
-    layout_panel->addWidget(sliderLabel);
-
-    slider->setRange(1,20);
-    slider->setValue(controls_value.k);
-    layout_panel->addWidget(slider);
-    connect(slider, &QSlider::valueChanged, this, &WebCam::on_slider_valueChanged);
-
-    layout_panel->addLayout(layout_control);
-        layout_control->addLayout(layout_left);
-            layout_left->addWidget(leftButton);
-        layout_control->addLayout(layout_center);
-            layout_center->addWidget(upButton);
-            layout_center->addWidget(downButton);
-        layout_control->addLayout(layout_right);
-            layout_right->addWidget(rightButton);
-
+    //2
     layout_panel->addLayout(butLayout);
         butLayout->addWidget(startStopButton);
         startStopButton->setText("Запустить трансляцию");
@@ -52,26 +29,42 @@ WebCam::WebCam()
         butLayout->addWidget(updateButton);
         updateButton->setText("Обновить камеру");
 
-    leftButton->setIcon(QPixmap( ":/new/Resources/left.png"));
-    rightButton->setIcon(QPixmap( ":/new/Resources/right.png"));
-    upButton->setIcon(QPixmap( ":/new/Resources/up.png"));
-    downButton->setIcon(QPixmap( ":/new/Resources/down.png"));
-    leftButton->setEnabled(false);
-    rightButton->setEnabled(false);
-    upButton->setEnabled(false);
-    downButton->setEnabled(false);
-    connect(leftButton, &QPushButton::clicked, this, &WebCam::on_leftButton_clicked);
-    connect(rightButton, &QPushButton::clicked, this, &WebCam::on_rightButton_clicked);
-    connect(upButton, &QPushButton::clicked, this, &WebCam::on_upButton_clicked);
-    connect(downButton, &QPushButton::clicked, this, &WebCam::on_downButton_clicked);
-
     connect(startStopButton, &QPushButton::clicked, this, &WebCam::on_startStopButton_clicked);
     connect(updateButton, &QPushButton::clicked, this, &WebCam::on_updateButton_clicked);
 
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
     if (!cameras.isEmpty()){
         m_camera = new QCamera( cameras.first());
-        layout->insertWidget(0,viewfinder);
+
+        camLayout = new QVBoxLayout;
+        udControlLayout = new QVBoxLayout;
+        cam2Layout = new QHBoxLayout;
+        lrContriolLayout = new QHBoxLayout;
+        sliderUpDown = new QSlider;
+        sliderLeftRight = new QSlider(Qt::Horizontal);
+        udControlLabel = new QLabel;
+        lrControlLabel = new QLabel;
+
+        layout->insertLayout(0,camLayout);
+            camLayout->addLayout(cam2Layout);
+                cam2Layout->addWidget(viewfinder);
+                cam2Layout->addLayout(udControlLayout);
+                    udControlLayout->addWidget(udControlLabel);
+                    udControlLayout->addWidget(sliderUpDown);
+                    sliderUpDown->setValue(controls_value.up_down);
+                    udControlLabel->setNum(controls_value.up_down);
+                    sliderUpDown->setRange(0,180);
+            camLayout->addLayout(lrContriolLayout);
+                lrContriolLayout->addWidget(lrControlLabel);
+                lrContriolLayout->addWidget(sliderLeftRight);
+                sliderLeftRight->setValue(controls_value.left_right);
+                lrControlLabel->setNum(controls_value.left_right);
+                sliderLeftRight->setRange(0,180);
+
+        connect(sliderUpDown, &QSlider::sliderReleased, this, &WebCam::on_sliderUpDown_valueChanged);
+        connect(sliderLeftRight, &QSlider::sliderReleased, this, &WebCam::on_sliderLeftRight_valueChanged);
+
+
         viewfinder->setMinimumSize( 50, 50 );
         m_camera->setViewfinder( viewfinder );
         m_camera->setCaptureMode( QCamera::CaptureStillImage );
@@ -93,14 +86,6 @@ WebCam::~WebCam(){
 //    delete updateButton;
 //    delete butLayout;
     //    delete spacer;
-}
-
-void WebCam::setEnabledButtons(bool val)
-{
-    leftButton->setEnabled(val);
-    rightButton->setEnabled(val);
-    upButton->setEnabled(val);
-    downButton->setEnabled(val);
 }
 
 void WebCam::on_startStopButton_clicked()
@@ -126,7 +111,6 @@ void WebCam::on_updateButton_clicked()
     if(m_camera != nullptr){
         if (m_camera->status() == QCamera::ActiveStatus )
             m_camera->stop();
-        //m_camera->deleteLater();
         delete m_camera;
         m_camera = nullptr;
     }
@@ -135,7 +119,8 @@ void WebCam::on_updateButton_clicked()
     if (!cameras.isEmpty()){
         m_camera = new QCamera(cameras.first());
         viewfinder = new QCameraViewfinder;
-        layout->insertWidget(0,viewfinder);
+        cam2Layout->insertWidget(0,viewfinder);
+
         viewfinder->setMinimumSize( 50, 50 );
         m_camera->setViewfinder( viewfinder );
         m_camera->setCaptureMode( QCamera::CaptureStillImage );
@@ -158,49 +143,20 @@ void WebCam::on_updateButton_clicked()
     }
 }
 
-void WebCam::on_slider_valueChanged()
-{
-    controls_value.k = slider->value();
-    sliderLabel->setNum(controls_value.k);
+void WebCam::on_sliderUpDown_valueChanged(){
+    if(controls_value.up_down != sliderUpDown->value()){
+        controls_value.up_down = sliderUpDown->value();
+        udControlLabel->setNum(controls_value.up_down);
+        emit send_control("UD",controls_value.up_down);
+        qDebug() << "UD Value Changed to " << controls_value.up_down;
+    }
 }
 
-void WebCam::on_downButton_clicked()
-{
-    controls_value.up_down += controls_value.k;
-    if (controls_value.up_down>180)
-        controls_value.up_down=180;
-    if(controls_value.up_down<0)
-        controls_value.up_down=0;
-    emit send_control("UD",controls_value.up_down);
+void WebCam::on_sliderLeftRight_valueChanged(){
+    if(controls_value.left_right != sliderLeftRight->value()){
+        controls_value.left_right = sliderLeftRight->value();
+        lrControlLabel->setNum(controls_value.left_right);
+        emit send_control("LR",controls_value.left_right);
+        qDebug() << "LR Value Changed to " << controls_value.left_right;
+    }
 }
-
-void WebCam::on_upButton_clicked()
-{
-    controls_value.up_down -= controls_value.k;
-    if (controls_value.up_down>180)
-        controls_value.up_down=180;
-    if(controls_value.up_down<0)
-        controls_value.up_down=0;
-    emit send_control("UD",controls_value.up_down);
-}
-
-void WebCam::on_leftButton_clicked()
-{
-    controls_value.left_right += controls_value.k;
-    if (controls_value.left_right>180)
-        controls_value.left_right=180;
-    if(controls_value.left_right<0)
-        controls_value.left_right=0;
-    emit send_control("LR",controls_value.left_right);
-}
-
-void WebCam::on_rightButton_clicked()
-{
-    controls_value.left_right -= controls_value.k;
-    if (controls_value.left_right>180)
-        controls_value.left_right=180;
-    if(controls_value.left_right<0)
-        controls_value.left_right=0;
-    emit send_control("LR",controls_value.left_right);
-}
-

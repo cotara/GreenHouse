@@ -319,7 +319,6 @@ void GreenHouse::on_Connect_triggered()
         ui->WindowsButton->setEnabled(true);
         ui->PumpButton->setEnabled(true);
         ui->HeatButton->setEnabled(true);
-        mCam->setEnabledButtons(true);
 
         mPlot->activateButtons();
     }
@@ -338,7 +337,6 @@ void GreenHouse::on_Disconnect_triggered()
         ui->WindowsButton->setEnabled(false);
         ui->PumpButton->setEnabled(false);
         ui->HeatButton->setEnabled(false);
-        mCam->setEnabledButtons(false);
 
         ui->statusBar->showMessage("Отключено от " + settings_ptr->getName());
         mPlot->diactivateButtons();
