@@ -27,6 +27,7 @@ CONFIG += c++11
 
 SOURCES += \
     axistag.cpp \
+    customactuatorcontrol.cpp \
         main.cpp \
         greenhouse.cpp \
     qcustomplot.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
 
 HEADERS += \
     axistag.h \
+    customactuatorcontrol.h \
         greenhouse.h \
     qcustomplot.h \
     serialsettings.h \
@@ -47,6 +49,7 @@ HEADERS += \
     myplot.h
 
 FORMS += \
+    customactuatorcontrol.ui \
         greenhouse.ui \
     serialsettings.ui
 
