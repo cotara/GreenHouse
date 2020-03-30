@@ -13,6 +13,7 @@
 #include <QtQuickWidgets/QQuickWidget>
 #include "myplot.h"
 #include "webcam.h"
+#include "customactuatorcontrol.h"
 
 namespace Ui {
 class GreenHouse;
@@ -74,6 +75,7 @@ private:
     WebCam *mCam;
     MyPlot *mPlot, *historyPlot;
     Console *mConsole;
+    CustomActuatorControl *customControl;
 
 
     void parser(const QByteArray &str);

@@ -56,6 +56,9 @@ GreenHouse::GreenHouse(QWidget *parent) :  QMainWindow(parent),
     //Виджет табов
     ui->tabWidget->setCurrentIndex(0);
 
+    customControl = new CustomActuatorControl();
+    ui->verticalLayout_7->addWidget(customControl);
+
 }
 GreenHouse::~GreenHouse(){
 //    delete ui;
@@ -110,6 +113,7 @@ void GreenHouse::parser(const QByteArray &str){
                 if (temp.length() > 1){
                     now_state.temperature=temp.at(1).toDouble();
                     ui->Temperature->display(now_state.temperature);
+                    emit customControl->temperatureChange(now_state.temperature);
                     set_temperature_dial();
                  }
             }

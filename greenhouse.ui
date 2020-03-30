@@ -791,11 +791,15 @@
         </item>
        </layout>
       </widget>
-      <widget class="CustomActuatorControl" name="tab_4">
+      <widget class="QWidget" name="tab_4">
        <attribute name="title">
         <string>Ручное управление</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_3"/>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_7"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -869,14 +873,6 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>CustomActuatorControl</class>
-   <extends>QWidget</extends>
-   <header>customactuatorcontrol.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>

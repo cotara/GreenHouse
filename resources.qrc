@@ -122,6 +122,10 @@
         <file>Resources/left.png</file>
         <file>Resources/right.png</file>
         <file>Resources/up.png</file>
+        <file>Resources/Heater.gif</file>
+        <file>Resources/noHeater.png</file>
+        <file>Resources/cooler.gif</file>
+        <file>Resources/noCooler.png</file>
     </qresource>
     <qresource prefix="/">
         <file>qml/dialcontrol.qml</file>
