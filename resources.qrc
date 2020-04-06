@@ -126,6 +126,9 @@
         <file>Resources/noHeater.png</file>
         <file>Resources/cooler.gif</file>
         <file>Resources/noCooler.png</file>
+        <file>Resources/LightControl_1.png</file>
+        <file>Resources/LightControl_2.png</file>
+        <file>Resources/LightControl_3.png</file>
     </qresource>
     <qresource prefix="/">
         <file>qml/dialcontrol.qml</file>
@@ -139,6 +142,10 @@
         <file>qml/content/overlay.png</file>
         <file>qml/content/quit.png</file>
         <file>qml/content/QuitButton.qml</file>
+        <file>qml/bulb.qml</file>
+        <file>qml/LightControl_1.png</file>
+        <file>qml/LightControl_2.png</file>
+        <file>qml/LightControl_3.png</file>
     </qresource>
     <qresource prefix="/img">
         <file>Resources/test.png</file>

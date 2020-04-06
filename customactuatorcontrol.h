@@ -2,6 +2,8 @@
 #define CUSTOMACTUATORCONTROL_H
 
 #include <QWidget>
+#include <QtQuickWidgets/QQuickWidget>
+#include <passdialog.h>
 
 namespace Ui {
 class CustomActuatorControl;
@@ -16,20 +18,25 @@ public:
     ~CustomActuatorControl();
 
 private slots:
-    void on_pushButton_clicked();
-    void on_HeaterOncheckBox_stateChanged(int arg1);
+
     void temperatureChanged(double);
-
-    void on_checkBox_2_stateChanged(int arg1);
-
-    void on_fanSpeedCheckBox_stateChanged(int arg1);
-
+    void on_CustomBulbCheckBox_stateChanged(int arg1);
+    void on_CustomFanCheckBox_stateChanged(int arg1);
+    void on_CustomHeatCheckBox_stateChanged(int arg1);
+    void on_CustomPumpCheckBox_stateChanged(int arg1);
     void on_fanSpeedSlider_sliderReleased();
+    void on_checkBox_stateChanged(int arg1);
+
+
+public slots:
+    void on_pushButton_clicked();
+    void pass_correct(bool);
 
 private:
     Ui::CustomActuatorControl *ui;
     QMovie *moHeater,*moCooler;
-
+    QQuickWidget *bulbQW;
+    PassDialog *passDialog;
     struct{
         int r=0;
         int g=0;
@@ -42,8 +49,8 @@ private:
 
 signals:
     void temperatureChange(double);
-    void send_control(QString,int);
-    void send_control(QString,int,int,int);
+    //void send_control(QString,int);
+    void send_control(QString,QString,QString,int,int,int);
 };
 
 #endif // CUSTOMACTUATORCONTROL_H

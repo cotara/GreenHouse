@@ -83,8 +83,8 @@ Item {
             angle: needleRotation.angle
         }
     }
-//! [needle_shadow]
-//! [needle]
+    //! [needle_shadow]
+    //! [needle]
     Image {
         id: needle
         x: 98
@@ -100,7 +100,7 @@ Item {
             //angle: Math.min(Math.max(-130, root.value*2.6 - 130), 133)
             angle:{
                 if (value == 180)
-                        180
+                    180
                 else if (type == 0)
                     value*10.833-281.67
                 else if (type == 1)
@@ -118,7 +118,7 @@ Item {
             //! [needle angle]
         }
     }
-//! [needle]
+    //! [needle]
     //! [overlay]
     Image { x: 21; y: 17; width: 148; height: 105; fillMode: Image.Stretch; scale: 1; source: "overlay.png"
         //anchors.fill: parent

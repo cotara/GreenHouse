@@ -30,6 +30,7 @@ SOURCES += \
     customactuatorcontrol.cpp \
         main.cpp \
         greenhouse.cpp \
+    passdialog.cpp \
     qcustomplot.cpp \
     serialsettings.cpp \
     console.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     axistag.h \
     customactuatorcontrol.h \
         greenhouse.h \
+    passdialog.h \
     qcustomplot.h \
     serialsettings.h \
     console.h \
@@ -51,6 +53,7 @@ HEADERS += \
 FORMS += \
     customactuatorcontrol.ui \
         greenhouse.ui \
+    passdialog.ui \
     serialsettings.ui
 
 # Default rules for deployment.

@@ -7,8 +7,9 @@
 #include <QMessageBox>
 #include <QTimer>
 #include "greenhouselog.h"
-#include <QQmlContext>
+//#include <QQmlContext>
 #include <QQuickItem>
+#include "customactuatorcontrol.h"
 
 GreenHouse::GreenHouse(QWidget *parent) :  QMainWindow(parent),
     ui(new Ui::GreenHouse){
@@ -49,15 +50,19 @@ GreenHouse::GreenHouse(QWidget *parent) :  QMainWindow(parent),
     mCam = new WebCam();
     ui->CamLayout->addWidget(mCam);
     connect(mCam, &WebCam::send_control, this, &GreenHouse::send_control_web);
+
     //Виджет лукер
     historyPlot = new MyPlot(1);
     ui->GraphFileLayout->addWidget(historyPlot);
 
     //Виджет табов
     ui->tabWidget->setCurrentIndex(0);
-
+    //Ручное уеправление
     customControl = new CustomActuatorControl();
     ui->verticalLayout_7->addWidget(customControl);
+    connect(customControl, &CustomActuatorControl::send_control, this, &GreenHouse::send_control_custom);
+
+
 
 }
 GreenHouse::~GreenHouse(){
@@ -410,6 +415,13 @@ void GreenHouse::on_HeatButton_clicked()
 void GreenHouse::send_control_web(QString type, int value)
 {
     QString message = type+ "=" + QString::number(value)+ '\n';
+    serial->write(message.toUtf8().data());
+    mConsole->putData(message.toUtf8());
+}
+
+void GreenHouse::send_control_custom(QString rs, QString gs, QString bs, int r, int g, int b)
+{
+    QString message = rs+ "=" + QString::number(r)+ gs+ "=" + QString::number(g)+bs+ "=" + QString::number(b)+'\n';
     serial->write(message.toUtf8().data());
     mConsole->putData(message.toUtf8());
 }

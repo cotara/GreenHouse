@@ -44,6 +44,7 @@ private slots:
     void on_HeatButton_clicked();
 
     void send_control_web(QString, int);
+    void send_control_custom(QString,QString,QString, int,int,int);
     void readData();
 
 private:
